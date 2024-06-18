@@ -20,7 +20,7 @@ store_response() {
   # Query Ollama for a response
   response=$(curl -s http://localhost:11434/api/generate -d '{
     "model": "llama3",
-    "prompt": "'"$prompt"'",
+    "prompt": "'"in the terms of is, is not, should not be associated with explain $prompt and give some SOP and debates, why and keywords to associate, also include any references, the answer should explain what it is, its opposite and its associations, and antonyms"'",
     "stream": false
   }' | jq -r .response)
 
