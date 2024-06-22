@@ -1,0 +1,6 @@
+source 'https://rubygems.org'
+
+# Example gem dependencies
+gem 'sinatra', '~> 2.1.0'
+gem 'sqlite3', '~> 1.4', '>= 1.4.2'
+# Add any other gems your application requires

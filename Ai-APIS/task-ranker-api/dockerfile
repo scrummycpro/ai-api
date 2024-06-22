@@ -1,0 +1,18 @@
+# Use a specific Ruby version from Docker Hub (e.g., 2.7.4)
+FROM ruby:2.7.4
+
+# Set the working directory inside the container
+WORKDIR /app
+
+# Copy and install dependencies
+COPY Gemfile Gemfile.lock ./
+RUN gem install bundler -v 2.4.22 && bundle install
+
+# Copy the rest of the application code into the container
+COPY . .
+
+# Expose port 4567 to the outside world
+EXPOSE 4567
+
+# Command to run the Sinatra application
+CMD ["ruby", "task-api-server.rb"]
