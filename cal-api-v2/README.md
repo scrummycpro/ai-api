@@ -189,3 +189,111 @@ To run your application using Docker Compose, use the following commands:
 - Ensure your Flask application script (`task-api-v2.py`) is correctly configured to listen on the specified port and handle API requests.
 
 This documentation provides a clear guide for running your Flask application using Docker, whether through direct Docker commands or Docker Compose for more complex setups.
+
+
+To create the documentation and Docker Compose file for RabbitMQ along with the script using jq, here's a detailed guide:
+
+### Docker Compose File (docker-compose.yml)
+
+```yaml
+version: '3.8'
+
+services:
+  rabbitmq:
+    image: rabbitmq:management
+    ports:
+      - "5672:5672"     # RabbitMQ standard port
+      - "15672:15672"   # RabbitMQ management UI port
+    volumes:
+      - ./rabbitmq_data:/var/lib/rabbitmq   # Volume for persistent data storage
+
+```
+
+### Documentation: Using RabbitMQ with jq and Docker Compose
+
+#### Overview
+
+This guide will walk you through setting up RabbitMQ with Docker Compose, attaching a volume for persistence, and using jq to process messages from a queue. RabbitMQ will be accessed via its management UI and CLI tools.
+
+#### Prerequisites
+
+1. Docker and Docker Compose installed on your system.
+2. Basic understanding of Docker and command-line tools.
+
+#### Setup RabbitMQ with Docker Compose
+
+1. **Create a Docker Compose file (`docker-compose.yml`)**:
+
+   ```yaml
+   version: '3.8'
+
+   services:
+     rabbitmq:
+       image: rabbitmq:management
+       ports:
+         - "5672:5672"     # RabbitMQ standard port
+         - "15672:15672"   # RabbitMQ management UI port
+       volumes:
+         - ./rabbitmq_data:/var/lib/rabbitmq   # Volume for persistent data storage
+   ```
+
+   This Compose file sets up a RabbitMQ container with the management plugin enabled, exposing ports `5672` for AMQP and `15672` for the management UI. It also mounts a local volume `./rabbitmq_data` to persist RabbitMQ data.
+
+2. **Start RabbitMQ Container**:
+
+   ```bash
+   docker-compose up -d
+   ```
+
+   This command will download the RabbitMQ image if not already present and start the container in detached mode (`-d`).
+
+3. **Access RabbitMQ Management UI**:
+
+   - Open a web browser and go to `http://localhost:15672`.
+   - Log in using credentials: Username: `guest`, Password: `guest`.
+   - You can monitor queues, exchanges, and messages using the management UI.
+
+#### Using jq to Process RabbitMQ Messages
+
+Now, let's assume you have a script (`process-queue.sh`) that fetches messages from a queue (`tasks_queue`) and processes them using `jq`.
+
+1. **Script to Fetch and Process Messages (`process-queue.sh`)**:
+
+   ```bash
+   #!/bin/bash
+
+   # Fetch messages from RabbitMQ queue
+   messages=$(curl -u guest:guest -XPOST \
+     http://localhost:15672/api/queues/%2F/tasks_queue/get \
+     -H "content-type: application/json" \
+     -d '{"count": 1, "requeue": true, "encoding": "auto", "ackmode": "ack_requeue_true"}' | jq -r '.[].payload')
+
+   # Process each message using jq
+   echo "$messages" | while read -r message; do
+       echo "Processing message: $message"
+       # Add your processing logic here
+       echo "$message" >> todo_list.txt  # Append message to todo_list.txt
+   done
+   ```
+
+   - This script uses `curl` to fetch one message (`"count": 1`) from the `tasks_queue`.
+   - It pipes the output to `jq` to extract the `.payload` from each message and then processes each message, appending it to `todo_list.txt`.
+
+2. **Running the Script**:
+
+   - Make sure the RabbitMQ container (`rabbitmq`) is running (`docker-compose up -d`).
+   - Run your script to fetch and process messages:
+
+     ```bash
+     bash process-queue.sh
+     ```
+
+3. **Viewing Messages**:
+
+   - After running the script, you can check `todo_list.txt` to see the appended messages.
+
+#### Conclusion
+
+This setup allows you to effectively use RabbitMQ with Docker Compose, process messages from queues using `jq` for JSON manipulation, and ensure persistence with Docker volumes. Adjust the queue name (`tasks_queue`) and processing logic in the script as per your application's requirements.
+
+By following these steps, you can integrate RabbitMQ into your workflow for reliable message processing and queuing tasks effectively.
