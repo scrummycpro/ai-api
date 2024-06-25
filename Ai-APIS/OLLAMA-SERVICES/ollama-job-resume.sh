@@ -3,7 +3,7 @@
 # Function to create the SQLite database and table if they don't exist
 create_database() {
   sqlite3 responses.db <<EOF
-CREATE TABLE IF NOT EXISTS responses (
+CREATE TABLE IF NOT EXISTS jobs (
   id INTEGER PRIMARY KEY,
   timestamp TEXT,
   prompt TEXT,
@@ -20,7 +20,7 @@ store_response() {
   # Query Ollama for a response
   response=$(curl -s http://localhost:11434/api/generate -d '{
     "model": "llama3",
-    "prompt": "'" what are the hebrew meanings of $prompt and give some SOP and debates, why and keywords to associate, also include any  kabbalah, freemasons, royal arch, and scottish rite rituals, also give the origin classical greek and hebrew, and any bible verses associated. Mention any thelema , wicca, alchemic refeferences and give  references, the answer should explain what it is, its opposite and its associations, and antonyms"'",
+    "prompt": "'"write a a resume entry for a senior position  for $prompt and give some accomplishments with numbers, show management of cross global teams, use software, buzzwords, and jargon, include a summary as some one with over a decade of experience, include any valuble information that will make the resume entry sound as human and successful as possible keywords to associate. Make the resume entry seem like an expert "'",
     "stream": false
   }' | jq -r .response)
 
@@ -30,7 +30,7 @@ store_response() {
 
   # Insert the timestamp, prompt, and response into the SQLite database
   sqlite3 responses.db <<EOF
-INSERT INTO responses (timestamp, prompt, response) VALUES ('$timestamp', '$escaped_prompt', '$escaped_response');
+INSERT INTO jobs (timestamp, prompt, response) VALUES ('$timestamp', '$escaped_prompt', '$escaped_response');
 EOF
 }
 

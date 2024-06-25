@@ -3,7 +3,7 @@
 # Function to create the SQLite database and table if they don't exist
 create_database() {
   sqlite3 responses.db <<EOF
-CREATE TABLE IF NOT EXISTS responses (
+CREATE TABLE IF NOT EXISTS logic (
   id INTEGER PRIMARY KEY,
   timestamp TEXT,
   prompt TEXT,
@@ -30,7 +30,7 @@ store_response() {
 
   # Insert the timestamp, prompt, and response into the SQLite database
   sqlite3 responses.db <<EOF
-INSERT INTO responses (timestamp, prompt, response) VALUES ('$timestamp', '$escaped_prompt', '$escaped_response');
+INSERT INTO logic (timestamp, prompt, response) VALUES ('$timestamp', '$escaped_prompt', '$escaped_response');
 EOF
 }
 

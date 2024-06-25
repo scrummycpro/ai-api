@@ -1,5 +1,7 @@
 from gtts import gTTS
 from pydub import AudioSegment
+import sys
+a = str(sys.argv[1])
 
 def text_to_speech_to_wav(text, output_file):
     # Generate speech using gTTS
@@ -14,7 +16,7 @@ def text_to_speech_to_wav(text, output_file):
     print(f"Text-to-speech conversion saved to {output_file}")
 
 # Text to be converted to speech
-text = "Hello, this is a text-to-speech conversion using gTTS and pydub."
+text = a 
 output_file = "output.wav"
 
 # Convert text to speech and save as WAV
