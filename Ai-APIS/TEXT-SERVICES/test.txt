@@ -1,0 +1,1 @@
+To make the code read from a text file, you can modify it to read the contents of the file specified in the command-line argument. Here’s how you can adjust the code:
