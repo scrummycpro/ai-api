@@ -168,3 +168,110 @@ ruby generate_calendar.rb \
 #### Conclusion
 
 This script simplifies the process of generating iCalendar (.ics) files for scheduling events, ensuring compatibility with calendar applications that support the iCalendar format. Adjust options and details according to specific event requirements and preferences.
+
+### README for make-schedule.rb
+
+## Overview
+
+`make-schedule.rb` is a Ruby script designed to create and manage events in an iCalendar (.ics) file. The script allows users to add multiple events with specified titles, start times, locations, and output them into a single `.ics` file. The script also supports appending new events to an existing `.ics` file and correctly formatting the iCalendar file for compatibility with most calendar applications.
+
+## Features
+
+- Add multiple events to a single iCalendar (.ics) file.
+- Specify event titles, start times, and locations.
+- Append events to an existing iCalendar file.
+- Ensure correct iCalendar formatting with `BEGIN:VCALENDAR` and `END:VCALENDAR` tags.
+
+## Prerequisites
+
+- Ruby (>= 2.0)
+- `optparse` (comes standard with Ruby)
+
+## Usage
+
+### Command-line Options
+
+- `-t TITLE`: Event title
+- `-s START`: Event start time (format: 'YYYY-MM-DD HH:MM:SS', local time)
+- `-l LOCATION`: Event location
+- `-f FILENAME`: Output filename for the iCalendar (.ics) file
+- `-e`: End of input (optional, use at the end of the command to close the iCalendar file)
+
+### Example Command
+
+To add multiple events to an iCalendar file:
+
+```sh
+ruby make-schedule.rb -t "Meeting 1" -s "2024-06-30 18:00:00" -l "Conference Room" -f calendar.ics \
+                     -t "Meeting 2" -s "2024-07-01 10:00:00" -l "Office" -f calendar.ics \
+                     -e
+```
+
+This command will:
+1. Add an event titled "Meeting 1" starting at "2024-06-30 18:00:00" in "Conference Room" to `calendar.ics`.
+2. Add another event titled "Meeting 2" starting at "2024-07-01 10:00:00" in "Office" to the same `calendar.ics` file.
+3. Close the iCalendar file with the `END:VCALENDAR` tag.
+
+### Detailed Steps
+
+1. **Add Event 1:**
+   - Title: "Meeting 1"
+   - Start Time: "2024-06-30 18:00:00"
+   - Location: "Conference Room"
+   - Output File: `calendar.ics`
+
+2. **Add Event 2:**
+   - Title: "Meeting 2"
+   - Start Time: "2024-07-01 10:00:00"
+   - Location: "Office"
+   - Output File: `calendar.ics`
+
+3. **End of Input:**
+   - Signal the end of input with `-e` to close the iCalendar file with `END:VCALENDAR`.
+
+### Script Details
+
+The script uses `optparse` to handle command-line arguments and ensures that all necessary fields are provided. Events are appended to the specified `.ics` file, and the script ensures correct formatting by adding the required `BEGIN:VCALENDAR` and `END:VCALENDAR` tags.
+
+### Example .ics File
+
+After running the example command, the `calendar.ics` file will look like this:
+
+```
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Your Organization//Your Product//EN
+BEGIN:VEVENT
+UID:generated-uuid-1
+DTSTAMP:20240625T171401Z
+DTSTART:20240630T180000Z
+SUMMARY:Meeting 1
+LOCATION:Conference Room
+END:VEVENT
+BEGIN:VEVENT
+UID:generated-uuid-2
+DTSTAMP:20240625T171401Z
+DTSTART:20240701T170000Z
+SUMMARY:Meeting 2
+LOCATION:Office
+END:VEVENT
+END:VCALENDAR
+```
+
+## Troubleshooting
+
+- **File Not Opening in Calendar App:** Ensure that the `.ics` file is correctly formatted with `BEGIN:VCALENDAR` at the start and `END:VCALENDAR` at the end.
+- **Incorrect Time Formatting:** Make sure the start time is provided in the format 'YYYY-MM-DD HH:MM:SS' and matches the local time.
+- **Dependencies Missing:** Ensure Ruby is installed on your system.
+
+## Contribution
+
+Feel free to fork the repository and submit pull requests. Any improvements or additional features are welcome!
+
+## License
+
+This project is licensed under the MIT License.
+
+---
+
+This detailed README should provide a comprehensive guide to using the `make-schedule.rb` script, ensuring users can effectively create and manage iCalendar files with multiple events.
