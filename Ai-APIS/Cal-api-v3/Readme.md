@@ -104,3 +104,67 @@ This project is licensed under the MIT License. See the LICENSE file for details
 ```
 
 This `README.md` file provides clear instructions on how to use the Ruby script, including prerequisites, usage examples, installation steps, and an explanation of the script's functionality. Adjust the script and `README.md` as needed for your specific use case.
+
+
+### Documentation for Generating iCalendar (.ics) Files
+
+This documentation provides instructions on how to use a Ruby script to generate iCalendar (.ics) files for scheduling events, suitable for sending meeting invites and calendar entries.
+
+#### Prerequisites
+
+1. **Ruby Installation**: Ensure Ruby is installed on your system.
+2. **Required Gems**: Ensure `optparse` gem is installed (`gem install optparse`) for command-line option parsing.
+
+#### Script Overview
+
+The provided Ruby script (`generate_calendar.rb`) generates an iCalendar (.ics) file based on user input for event details. It includes features such as time zone handling and attendee notifications.
+
+#### Usage
+
+```bash
+ruby generate_calendar.rb -t TITLE -d DESCRIPTION -s START -e END -l LOCATION -o ORGANIZER -a ATTENDEE -z TIMEZONE -f FILENAME
+```
+
+- **-t TITLE**: Event title.
+- **-d DESCRIPTION**: Event description.
+- **-s START**: Event start time (format: 'YYYY-MM-DD HH:MM:SS', local time).
+- **-e END**: Event end time (format: 'YYYY-MM-DD HH:MM:SS', local time).
+- **-l LOCATION**: Event location.
+- **-o ORGANIZER**: Organizer email (format: 'Name <email@example.com>').
+- **-a ATTENDEE**: Attendee email (format: 'Name <email@example.com>').
+- **-z TIMEZONE**: Time zone abbreviation (e.g., 'PST', 'PDT').
+- **-f FILENAME**: Output filename for the .ics file.
+
+#### Example
+
+```bash
+ruby generate_calendar.rb \
+  -t "Team Meeting" \
+  -d "Weekly team meeting to discuss project updates." \
+  -s "2024-06-25 10:00:00" \
+  -e "2024-06-25 11:00:00" \
+  -l "Conference Room A" \
+  -o "John Doe <john.doe@example.com>" \
+  -a "Jane Smith <jane.smith@example.com>" \
+  -z "PST" \
+  -f "team_meeting.ics"
+```
+
+#### Script Details
+
+1. **Parsing Command-Line Options**: Uses `optparse` to parse and validate command-line arguments.
+2. **Time Conversion**: Converts event start and end times to UTC format for compatibility across different time zones.
+3. **Creating .ics File**: Generates an iCalendar file with event details including title, description, location, organizer, attendee, and a reminder alarm.
+
+#### Output
+
+- The script creates an iCalendar file (`team_meeting.ics` in the example) in the current directory based on the provided options.
+
+#### Notes
+
+- Ensure all required options (`-t`, `-d`, `-s`, `-e`, `-l`, `-o`, `-a`, `-z`, `-f`) are provided to successfully generate the .ics file.
+- The script includes a reminder alarm set to notify attendees 15 minutes before the event starts.
+
+#### Conclusion
+
+This script simplifies the process of generating iCalendar (.ics) files for scheduling events, ensuring compatibility with calendar applications that support the iCalendar format. Adjust options and details according to specific event requirements and preferences.
