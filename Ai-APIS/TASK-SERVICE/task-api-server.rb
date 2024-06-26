@@ -8,6 +8,7 @@ DB.execute <<-SQL
   CREATE TABLE IF NOT EXISTS tasks (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    name TEXT,
     description TEXT,
     ranking INTEGER,
     tags TEXT
@@ -22,9 +23,10 @@ def parse_task(task)
   {
     id: task[0],
     timestamp: task[1],
-    description: task[2],
-    ranking: task[3],
-    tags: task[4]
+    name: task[2],
+    description: task[3],
+    ranking: task[4],
+    tags: task[5]
   }
 end
 
@@ -64,6 +66,7 @@ end
 post '/tasks' do
   begin
     data = JSON.parse(request.body.read)
+    name = data['name']
     description = data['description']
     ranking = data['ranking']&.to_i  # Ensure ranking is converted to integer
     tags = data['tags']
@@ -71,8 +74,8 @@ post '/tasks' do
     # Limit ranking to maximum value of MAX_RANKING
     ranking = [ranking, MAX_RANKING].min if ranking
 
-    if description && ranking
-      DB.execute('INSERT INTO tasks (description, ranking, tags) VALUES (?, ?, ?)', [description, ranking, tags])
+    if name && description && ranking
+      DB.execute('INSERT INTO tasks (name, description, ranking, tags) VALUES (?, ?, ?, ?)', [name, description, ranking, tags])
       status 201
     else
       status 400
@@ -88,6 +91,7 @@ end
 patch '/tasks/:id' do |id|
   begin
     data = JSON.parse(request.body.read)
+    name = data['name']
     description = data['description']
     ranking = data['ranking']&.to_i  # Ensure ranking is converted to integer
     tags = data['tags']
@@ -95,8 +99,8 @@ patch '/tasks/:id' do |id|
     # Limit ranking to maximum value of MAX_RANKING
     ranking = [ranking, MAX_RANKING].min if ranking
 
-    if description || ranking || tags
-      DB.execute('UPDATE tasks SET description = ?, ranking = ?, tags = ? WHERE id = ?', [description, ranking, tags, id.to_i])
+    if name || description || ranking || tags
+      DB.execute('UPDATE tasks SET name = ?, description = ?, ranking = ?, tags = ? WHERE id = ?', [name, description, ranking, tags, id.to_i])
       status 204
     else
       status 400
@@ -119,10 +123,10 @@ delete '/tasks/:id' do |id|
   end
 end
 
-# Endpoint to search tasks by keyword in description or tags (case insensitive)
+# Endpoint to search tasks by keyword in name, description, or tags (case insensitive)
 get '/tasks/search/:keyword' do |keyword|
   keyword = '%' + keyword.downcase + '%'  # Convert keyword to lowercase and add SQL wildcard for partial matching
-  tasks = DB.execute('SELECT * FROM tasks WHERE LOWER(description) LIKE ? OR LOWER(tags) LIKE ?', [keyword, keyword])
+  tasks = DB.execute('SELECT * FROM tasks WHERE LOWER(name) LIKE ? OR LOWER(description) LIKE ? OR LOWER(tags) LIKE ?', [keyword, keyword, keyword])
   
   if tasks.empty?
     status 404

@@ -203,8 +203,8 @@ To add multiple events to an iCalendar file:
 
 ```sh
 ruby make-schedule.rb -t "Meeting 1" -s "2024-06-30 18:00:00" -l "Conference Room" -f calendar.ics \
-                     -t "Meeting 2" -s "2024-07-01 10:00:00" -l "Office" -f calendar.ics \
-                     -e
+-t "Meeting 2" -s "2024-07-01 10:00:00" -l "Office" -f calendar.ics \
+-e
 ```
 
 This command will:
