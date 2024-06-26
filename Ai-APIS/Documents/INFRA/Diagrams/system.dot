@@ -1,0 +1,41 @@
+digraph G {
+    // Add a title
+    label = "System Architecture Diagram";
+    labelloc = "t"; // Place the label at the top
+    labeljust = "c"; // Center the label
+
+    // Define node shapes and colors
+    AI_SERVER [shape=box, color=blue, style=filled, fillcolor=lightblue, label="AI Server"];
+    SQLite_DB [shape=cylinder, color=orange, style=filled, fillcolor=lightyellow, label="Main SQLite Database"];
+    Cron_Job [shape=ellipse, color=green, style=filled, fillcolor=lightgreen, label="Cron Job"];
+    RabbitMQ [shape=hexagon, color=purple, style=filled, fillcolor=lavender, label="RabbitMQ"];
+    Script_1 [shape=parallelogram, color=red, style=filled, fillcolor=lightcoral, label="Script 1"];
+    Script_2 [shape=parallelogram, color=red, style=filled, fillcolor=lightcoral, label="Script 2"];
+    Script_3 [shape=parallelogram, color=red, style=filled, fillcolor=lightcoral, label="Script 3"];
+    Script_4 [shape=parallelogram, color=red, style=filled, fillcolor=lightcoral, label="Script 4"];
+    PGSQL [shape=house, color=brown, style=filled, fillcolor=lightgoldenrodyellow, label="PostgreSQL"];
+    table_1 [shape=ellipse, color=green, style=filled, fillcolor=lightgreen, label="Table 1"];
+    table_2 [shape=ellipse, color=green, style=filled, fillcolor=lightgreen, label="Table 2"];
+    table_3 [shape=ellipse, color=green, style=filled, fillcolor=lightgreen, label="Table 3"];
+    table_4 [shape=ellipse, color=green, style=filled, fillcolor=lightgreen, label="Table 4"];
+
+    // Define edges to show data flow
+    AI_SERVER -> SQLite_DB [label="stores data"];
+    Cron_Job -> SQLite_DB [label="queries"];
+    Cron_Job -> RabbitMQ [label="publishes"];
+    RabbitMQ -> Script_1 [label="consumes"];
+    RabbitMQ -> Script_2 [label="consumes"];
+    RabbitMQ -> Script_3 [label="consumes"];
+    RabbitMQ -> Script_4 [label="consumes"];
+    Script_1 -> PGSQL [label="inserts to"];
+    Script_2 -> PGSQL [label="inserts to"];
+    Script_3 -> PGSQL [label="inserts to"];
+    Script_4 -> PGSQL [label="inserts to"];
+    PGSQL -> table_1 [label="stores in"];
+    PGSQL -> table_2 [label="stores in"];
+    PGSQL -> table_3 [label="stores in"];
+    PGSQL -> table_4 [label="stores in"];
+
+    // Optional: Rank the nodes for better visualization
+    { rank=same; Script_1; Script_2; Script_3; Script_4; }
+}

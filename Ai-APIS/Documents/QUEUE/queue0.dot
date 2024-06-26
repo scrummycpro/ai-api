@@ -1,0 +1,69 @@
+digraph G {
+    // Add a title
+    label = "System Architecture with Topic Exchange";
+    labelloc = "t"; // Place the label at the top
+    labeljust = "c"; // Center the label
+
+    // Define node shapes and colors
+    AI_SERVER [shape=box, color=blue, style=filled, fillcolor=lightblue, label="AI Server"];
+    RabbitMQ [shape=hexagon, color=purple, style=filled, fillcolor=lavender, label="RabbitMQ Topic Exchange"];
+    Queue_0 [shape=cylinder, color=purple, style=filled, fillcolor=lavender, label="Queue 0"];
+    Script_1 [shape=parallelogram, color=red, style=filled, fillcolor=lightcoral, label="Query Script 1"];
+    Script_2 [shape=parallelogram, color=red, style=filled, fillcolor=lightcoral, label="Query Script 2"];
+    Script_3 [shape=parallelogram, color=red, style=filled, fillcolor=lightcoral, label="Query Script 3"];
+    Script_4 [shape=parallelogram, color=red, style=filled, fillcolor=lightcoral, label="Query Script 4"];
+    PGSQL [shape=cylinder, color=brown, style=filled, fillcolor=lightgoldenrodyellow, label="PostgreSQL"];
+    table_1 [shape=ellipse, color=green, style=filled, fillcolor=lightgreen, label="Table 1"];
+    table_2 [shape=ellipse, color=green, style=filled, fillcolor=lightgreen, label="Table 2"];
+    table_3 [shape=ellipse, color=green, style=filled, fillcolor=lightgreen, label="Table 3"];
+    table_4 [shape=ellipse, color=green, style=filled, fillcolor=lightgreen, label="Table 4"];
+
+    // Subgraph for Queue_0 and topics
+    subgraph cluster_queue {
+        label = "Queue 0 with Topics";
+        style=filled;
+        color=lightgrey;
+        node [style=filled, color=white];
+        Queue_0;
+        topic_A [label="Topic A"];
+        topic_B [label="Topic B"];
+        topic_C [label="Topic C"];
+        topic_D [label="Topic D"];
+    }
+
+    // Subgraph for PostgreSQL and its tables
+    subgraph cluster_pgsql {
+        label = "PostgreSQL";
+        style=filled;
+        color=lightgrey;
+        node [style=filled, color=white];
+        PGSQL;
+        table_1;
+        table_2;
+        table_3;
+        table_4;
+    }
+
+    // Define edges to show data flow
+    AI_SERVER -> RabbitMQ [label="publishes"];
+    RabbitMQ -> Queue_0 [label="routes to"];
+    Queue_0 -> topic_A;
+    Queue_0 -> topic_B;
+    Queue_0 -> topic_C;
+    Queue_0 -> topic_D;
+    topic_A -> Script_1 [label="consumes"];
+    topic_B -> Script_2 [label="consumes"];
+    topic_C -> Script_3 [label="consumes"];
+    topic_D -> Script_4 [label="consumes"];
+    Script_1 -> PGSQL [label="inserts data"];
+    Script_2 -> PGSQL [label="inserts data"];
+    Script_3 -> PGSQL [label="inserts data"];
+    Script_4 -> PGSQL [label="inserts data"];
+    PGSQL -> table_1 [label="distributes to"];
+    PGSQL -> table_2 [label="distributes to"];
+    PGSQL -> table_3 [label="distributes to"];
+    PGSQL -> table_4 [label="distributes to"];
+
+    // Optional: Rank the nodes for better visualization
+    { rank=same; Script_1; Script_2; Script_3; Script_4; }
+}
